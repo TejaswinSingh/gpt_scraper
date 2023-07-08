@@ -55,3 +55,59 @@ To set up the project and get it running, follow the steps below:
    ```
 
    In the second-to-last line of the code block above, change the `version_main` parameter to match the version of ChromeDriver (or Chrome) you're using. It's recommended to use the latest version available.
+
+## How to Use
+   ```python
+   import gpt_scraper
+   
+   def run():
+       chat_instance = gpt_scraper.ChatGPT(
+           hidden=True
+       )  # give argument 'hidden=True' if you want to open chrome in headless mode. Default in non-headless
+       chat_instance.set_credentials("youremail", "youropenaipassword")
+   
+       try:
+           chat_instance.login()
+       except gpt_scraper.InvalidCredentialsError as e:  # if credentails were invalid
+           return
+       except (
+           RuntimeError
+       ):  # if credentials were not set or there was something wrong with the openai_url
+           return
+       except (
+           TimeoutError
+       ):  # if something else goes wrong during login (like if a button was not found)
+           return
+   
+       question = input("Question: ")
+       try:
+           response = chat_instance.query(question)
+           print(f"Response: {response}")
+       except (
+           TimeoutError
+       ):  # if a button or web-element was not found after repeated tries. This exception is also raised by the query() method if ChatGPT gave an empty string ('') as reponse (rare)
+           return
+       except (
+           RuntimeError
+       ):  # if something goes wrong while getting the response. See error section below for more help
+           return
+   
+       try:
+           chat_instance.logout(
+               clear_chats=False
+           )  # to not clear all chats before logging out. Default is True
+       except TimeoutError:  # Exceptions can occur if clear_chats was set to True
+           return
+   ```
+
+**Handle Error Cases:** 
+
+   ```
+   Error Section: These are some of the common exceptions that I noticed occurring when getting a response. You can catch them specifically, like HourlyLimitReachedError, to try again after some time,
+   or PromptTooLongError, to shorten up the prompt a bit. Or you can catch them all as RuntimeError.
+   ___________________
+       HourlyLimitReachedError: "You've reached our limit of messages per hour. Please try again later."
+       NetworkError: "An error occurred. Either the engine you requested does not exist or there was another issue processing your request. If this issue persists, please contact us through our help center at help.openai.com."
+       PromptTooLongError: "The message you submitted was too long, please reload the conversation and submit something shorter."
+       MultiplePromptsError: "Only one message at a time. Please allow any other responses to complete before sending another message or wait one minute."
+   ```
