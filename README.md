@@ -30,9 +30,9 @@ To set up the project and get it running, follow the steps below:
    - utils.py
    - chromedriver (executable file)
    ```
-3. **Now go to gpt_scraper.py, inside the class ChatGPT, find the instance method _set_driver(). It should look like this - **
+3. **Now go to gpt_scraper.py, inside the class ChatGPT, find the instance method _set_driver(). It should look like this -**
 
-  '''python
+  '''
     # sets undetected chromedriver
     def _set_driver(self):
         options = webdriver.ChromeOptions()
