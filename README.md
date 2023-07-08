@@ -61,7 +61,7 @@ To set up the project and get it running, follow the steps below:
    import gpt_scraper
    
    def run():
-      # create instnace
+      # create instance
        chat_instance = gpt_scraper.ChatGPT(
            hidden=True
        )  # give argument 'hidden=True' if you want to open chrome in headless mode. Default in non-headless
