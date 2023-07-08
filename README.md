@@ -1,6 +1,6 @@
 # gpt_scraper
 
-The `gpt_scraper` is a Python script that uses Selenium and a Chrome WebDriver to interact with the OpenAI ChatGPT interface. It provides functionality to log in to the ChatGPT platform, send queries to the chatbot, and retrieve responses. The script handles various login and query-related scenarios.
+The `gpt_scraper` is a Python script that uses Selenium and a Chrome WebDriver to interact with the OpenAI ChatGPT interface. It provides functionality to log in to the ChatGPT platform, send queries to the chatbot, and retrieve responses. The script handles login and query part.
 
 ## How to Setup
 
@@ -61,11 +61,13 @@ To set up the project and get it running, follow the steps below:
    import gpt_scraper
    
    def run():
+      # create instnace
        chat_instance = gpt_scraper.ChatGPT(
            hidden=True
        )  # give argument 'hidden=True' if you want to open chrome in headless mode. Default in non-headless
        chat_instance.set_credentials("youremail", "youropenaipassword")
-   
+
+      # login
        try:
            chat_instance.login()
        except gpt_scraper.InvalidCredentialsError as e:  # if credentails were invalid
@@ -76,10 +78,11 @@ To set up the project and get it running, follow the steps below:
            return
        except (
            TimeoutError
-       ):  # if something else goes wrong during login (like if a button was not found)
+       ):  # if something else goes wrong during login (like if a button was not found after repeated tries)
            return
-   
-       question = input("Question: ")
+
+      # query
+       question = 'Hey, how are you?'
        try:
            response = chat_instance.query(question)
            print(f"Response: {response}")
@@ -91,7 +94,8 @@ To set up the project and get it running, follow the steps below:
            RuntimeError
        ):  # if something goes wrong while getting the response. See error section below for more help
            return
-   
+
+      # logout
        try:
            chat_instance.logout(
                clear_chats=False
