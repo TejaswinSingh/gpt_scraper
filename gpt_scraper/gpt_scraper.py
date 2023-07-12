@@ -371,9 +371,7 @@ class ChatGPT:
                 if div.text in error_messages:
                     raise error_messages[div.text](div.text)
             # incase some other exception occurred
-            self.__driver.get_screenshot_as_png(
-                "screenshot_prompt-reply_unknown_error.png"
-            )
+            self.__driver.save_screenshot("screenshot_prompt-reply_unknown_error.png")
             raise RuntimeError(e)
 
         # query response
