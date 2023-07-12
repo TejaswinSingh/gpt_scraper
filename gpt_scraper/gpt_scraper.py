@@ -39,6 +39,9 @@ class ChatGPT:
             raise TypeError("argument 'hidden' must be of type 'bool'")
         self.__headless_mode = setVal
 
+    def logged_in(self):
+        return self.__logged_in
+
     # closes the uc driver
     def logout(self, clear_chats=True):
         self._clear_chats = clear_chats
@@ -92,7 +95,7 @@ class ChatGPT:
             self.__driver.get(self.__openai_url)
             assert "ChatGPT" in self.__driver.title  # verifies the url
         except Exception as e:
-            raise RuntimeError(
+            raise TimeoutError(
                 e
             )  # gives selenium.common.exceptions.WebDriverException either for ERR_NAME_NOT_RESOLVED (when URL is incorrect) or ERR_INTERNET_DISCONNECTED (when not connected to internet)
 
@@ -220,10 +223,11 @@ class ChatGPT:
             if span.text == "Wrong email or password":
                 raise InvalidCredentialsError("Incorrect password")
 
-        # flag
-        self.__logged_in = True
         # clear popups
         self._clear_popups()
+        # flag
+        self.__logged_in = True
+
 
     # clears popups that come up after login
     def _clear_popups(self):
