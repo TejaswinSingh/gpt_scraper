@@ -12,27 +12,7 @@ To set up the project and get it running, follow the steps below:
    pip install -r requirements.txt
    ```
 
-2. **Download ChromeDriver:**
-
-   - Determine the version of Google Chrome installed on your system. You can find this information by opening Chrome and going to `chrome://version/`. Look for the "Google Chrome" field to find the version number.
-
-   - Visit the [ChromeDriver download page](https://sites.google.com/chromium.org/driver/?pli=1).
-
-   - Download the version of ChromeDriver that matches your Chrome browser version. Make sure to choose the appropriate version for your operating system.
-
-   - Extract the downloaded ChromeDriver executable from the archive file (if it's zipped).
-
-   - Move the ChromeDriver executable file to the same folder where your `gpt_scraper.py` script is located.
-
-   Your folder structure should look like this:
-
-   ```
-   - gpt_scraper.py
-   - utils.py
-   - chromedriver (executable file)
-   ```
-
-3. **Configure ChromeDriver Version:**
+2. **Change ChromeDriver Version:**
 
    Open the `gpt_scraper.py` script and locate the `ChatGPT` class. Inside the class, find the `_set_driver()` instance method. It should look like this:
 
@@ -54,7 +34,7 @@ To set up the project and get it running, follow the steps below:
        )  # change version_main to your chromedriver version
    ```
 
-   In the second-to-last line of the code block above, change the `version_main` parameter to match the version of ChromeDriver (or Chrome) you're using. It's recommended to use the latest version available.
+   In the second-to-last line of the code block above, change the `version_main` parameter to match the version of Chrome (or ChromeDriver) you're using. It's recommended to use the latest version available.
 
 ## How to Use
    ```python
