@@ -73,10 +73,6 @@ To set up the project and get it running, follow the steps below:
        except gpt_scraper.InvalidCredentialsError as e:  # if credentails were invalid
            return
        except (
-           RuntimeError
-       ):  # if credentials were not set or there was something wrong with the openai_url
-           return
-       except (
            TimeoutError
        ):  # if something else goes wrong during login (like if a button was not found after repeated tries)
            return
