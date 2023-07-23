@@ -1,6 +1,6 @@
 # gpt_scraper
 
-The `gpt_scraper` is a Python script that uses Selenium  to interact with the OpenAI ChatGPT interface. It provides functionality to log in to the ChatGPT platform, send queries to the chatbot, and retrieve responses. The script handles login and query part.
+The `gpt_scraper` is a Python script that uses Selenium  to interact with the OpenAI ChatGPT interface. It provides functionality to log in to the ChatGPT platform, send queries to the chatbot, and retrieve responses. It also handles errors on OpenAI's side, such as when the hourly limit for prompts is reached or when the entered prompt is too long, etc. Additionally, if the response is too large and a "Continue generating" button appears, it handles that case as well to obtain the complete response.
 
 ## How to Setup
 
