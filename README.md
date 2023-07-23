@@ -93,11 +93,12 @@ To set up the project and get it running, follow the steps below:
 
       # logout
        try:
+         if chat_instance.logged_in():
            chat_instance.logout(
                clear_chats=False
            )  # to not clear all chats before logging out. Default is True
        except TimeoutError:  # Exceptions can occur if clear_chats was set to True
-           return
+           pass
    ```
 
 **Handle Error Cases:** 
