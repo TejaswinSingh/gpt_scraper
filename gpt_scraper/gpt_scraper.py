@@ -78,12 +78,8 @@ class ChatGPT:
 
         # headless mode
         options.add_argument("--headless=new")  # for hidden mode
-        # below two arguments are required to run the driver in HEROKU system
-        #options.add_argument("--disable-dev-shm-usage")
-        #options.add_argument("--no-sandbox")
-        #options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         return uc.Chrome(
-            options=options, version_main=114, #driver_executable_path=os.environ.get("CHROMEDRIVER_PATH")
+            options=options, version_main=114
         )  # change version_main to your chromedriver version
 
     def set_credentials(self, email, password):
