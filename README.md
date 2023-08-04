@@ -14,7 +14,7 @@ To set up the project and get it running, follow the steps below:
 
 2. **Change ChromeDriver Version:**
 
-   Open the `gpt_scraper.py` script and locate the `ChatGPT` class. Inside the class, find the `_set_driver()` instance method on line 68. It should look like this:
+   Open the `gpt_scraper.py` script and locate the `ChatGPT` class. Inside the class, find the `_set_driver()` instance method on *line 68*. It should look like this:
 
    ```python
    def _set_driver(self):
