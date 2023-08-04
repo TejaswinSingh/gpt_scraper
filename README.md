@@ -92,3 +92,54 @@ To set up the project and get it running, follow the steps below:
        PromptTooLongError: "The message you submitted was too long, please reload the conversation and submit something shorter."
        MultiplePromptsError: "Only one message at a time. Please allow any other responses to complete before sending another message or wait one minute."
    ```
+
+## Invalid Handle Error
+
+If you encounter the following error related to the "undetected_chromedriver" library:
+
+```
+Exception ignored in: <function Chrome.__del__ at 0x000001BED7E284A0>
+Traceback (most recent call last):
+  File "C:\Users\PC\Downloads\mail_bot\.venv\Lib\site-packages\undetected_chromedriver\__init__.py", line 793, in __del__
+  File "C:\Users\PC\Downloads\mail_bot\.venv\Lib\site-packages\undetected_chromedriver\__init__.py", line 748, in quit   
+OSError: [WinError 6] The handle is invalid
+```
+
+You can resolve it by making the following changes to the "__init__.py" file in "undetected_chromedriver" library. If you're using VSCode, follow these steps:
+
+1. Hover over the file name in the error output above. An option "Open file in editor" will appear, click on it.
+2. Go to line number 748:
+
+Python code
+```python
+...
+for _ in range(5):
+    try:
+        shutil.rmtree(self.user_data_dir, ignore_errors=False)
+    except FileNotFoundError:
+        pass
+    except (RuntimeError, OSError, PermissionError) as e:
+        logger.debug(
+            "When removing the temp profile, a %s occured: %s\nretrying..."
+            % (e.__class__.__name__, e)
+        )
+    else:
+        logger.debug("successfully removed %s" % self.user_data_dir)
+        break
+    # comment out the line below by placing a '#' before it, like this - # time.sleep(0.1)
+    time.sleep(0.1)
+
+# dereference patcher, so patcher can start cleaning up as well.
+# this must come last, otherwise it will throw 'in use' errors
+self.patcher = None
+...
+```
+
+Additionally, comment out the following line:
+
+```python
+# comment out the line below by placing a '#' before it, like this - #time.sleep(0.1)
+time.sleep(0.1)
+```
+
+This should resolve the "Invalid Handle Error" related to the "undetected_chromedriver" library.
