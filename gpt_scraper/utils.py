@@ -25,8 +25,14 @@ def select_button_with_text(
             and button.text.lower() == text
         ):
             return button
+        
+        if (
+            in_div == False
+            and button.text.lower() == text.lower()
+        ):
+            return button
 
-        if in_div == True:
+        elif in_div == True:
             try:
                 # Find the div element inside the button
                 divs = button.find_elements(By.XPATH, ".//div")
