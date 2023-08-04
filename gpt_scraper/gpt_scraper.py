@@ -465,14 +465,16 @@ class ChatGPT:
             raise TimeoutError('Settings div not found')
 
         # click on clear button
+        error = 'Clear button was not found while clearing chats'
         try:
             clear_button = thediv.find_element(By.CSS_SELECTOR, "button.btn.relative.btn-danger")
             time.sleep(0.1)
             if not clear_button.is_enabled():  # clear button is disabled when no previous chats found
-                raise TimeoutError("No chat history found")
+                error = 'No chat history found'
+                raise TimeoutError
             clear_button.click()
         except Exception:
-            raise TimeoutError("Clear button was not found")
+            raise TimeoutError(error)
 
         # find the settings div again (coz it refreshes)
         try:
