@@ -30,7 +30,7 @@ To set up the project and get it running, follow the steps below:
        # headless mode
        options.add_argument("--headless=new")  # for hidden mode
        return uc.Chrome(
-           options=options, version_main=114
+           options=options, version_main=115
        )  # change version_main to your chromedriver version
    ```
 
