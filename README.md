@@ -110,7 +110,6 @@ You can resolve it by making the following changes to the '__init__.py' file in 
 1. Hover over the file name in the error output above. An option "Open file in editor" will appear, click on it.
 2. Now the file is opened, go to line number 748:
 
-Python code
 ```python
 ...
 for _ in range(5):
