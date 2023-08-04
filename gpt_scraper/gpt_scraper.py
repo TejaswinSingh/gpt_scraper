@@ -79,7 +79,7 @@ class ChatGPT:
         # headless mode
         options.add_argument("--headless=new")  # for hidden mode
         return uc.Chrome(
-            options=options, version_main=114
+            options=options, version_main=115
         )  # change version_main to your chromedriver version
 
     def set_credentials(self, email, password):
@@ -322,7 +322,7 @@ class ChatGPT:
 
         while time.time() - start_time < timeout:
             try:
-                elements = self.__driver.find_elements(By.TAG_NAME, "button")
+                elements = self.__driver.find_elements(By.XPATH, '//button[contains(@class, "absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40")][@style="background-color: rgb(25, 195, 125);"]')
                 # finds send button using an svg inside it
                 send_button = utils.select_button_with_svg(
                     elements, xmlns=r"http://www.w3.org/2000/svg"
@@ -468,12 +468,12 @@ class ChatGPT:
         try:
             clear_button = thediv.find_element(By.CSS_SELECTOR, "button.btn.relative.btn-danger")
             time.sleep(0.1)
-            if not clear_button.is_enabled(): # clear button is disabled when no previous chats found
+            if not clear_button.is_enabled():  # clear button is disabled when no previous chats found
                 raise TimeoutError("No chat history found")
             clear_button.click()
         except Exception:
             raise TimeoutError("Clear button was not found")
-            
+
         # find the settings div again (coz it refreshes)
         try:
             thediv = self.__driver.find_element(By.CSS_SELECTOR, 'div.absolute.inset-0')
@@ -485,7 +485,9 @@ class ChatGPT:
         confirm_button = utils.select_button_with_text(buttons, 'Confirm deletion')
         if confirm_button == None:
             raise TimeoutError("Confirm deletion button was not found")
-        confirm_button.click()           
+        
+        confirm_button.click()                   
+
 
 class IllegalLogoutError(RuntimeError):
     pass
