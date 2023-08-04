@@ -105,7 +105,7 @@ Traceback (most recent call last):
 OSError: [WinError 6] The handle is invalid
 ```
 
-You can resolve it by making the following changes to the "__init__.py" file in "undetected_chromedriver" library. If you're using VSCode, follow these steps:
+You can resolve it by making the following changes to the '__init__.py' file in "undetected_chromedriver" library. If you're using VSCode, follow these steps:
 
 1. Hover over the file name in the error output above. An option "Open file in editor" will appear, click on it.
 2. Go to line number 748:
@@ -126,7 +126,6 @@ for _ in range(5):
     else:
         logger.debug("successfully removed %s" % self.user_data_dir)
         break
-    # comment out the line below by placing a '#' before it, like this - # time.sleep(0.1)
     time.sleep(0.1)
 
 # dereference patcher, so patcher can start cleaning up as well.
@@ -135,11 +134,10 @@ self.patcher = None
 ...
 ```
 
-Additionally, comment out the following line:
+3. Comment out the code below by placing a '#' before it, like this -
 
 ```python
-# comment out the line below by placing a '#' before it, like this - #time.sleep(0.1)
-time.sleep(0.1)
+# time.sleep(0.1)
 ```
 
-This should resolve the "Invalid Handle Error" related to the "undetected_chromedriver" library.
+This should resolve the "Invalid Handle Error" issue.
