@@ -423,72 +423,69 @@ class ChatGPT:
         timeout = self.__timeout
 
         # clicks on namebar
-        clicked = False
-        start_time = time.time()
-
-        while time.time() - start_time < timeout:
-            try:
-                elements = self.__driver.find_elements(By.TAG_NAME, "button")
-                # namebar is the bottom-most element of the left hand sidebar , which shows user-email
-                nameBar_btn = utils.select_button_with_text(
-                    elements, text=self.__openai_login_credentials["email"], in_div=True
-                )
-                if nameBar_btn == None:
-                    continue
-
-                nameBar_btn.click()
-                clicked = True
-                break
-
-            except Exception:
-                continue
-        if not clicked:
-            raise TimeoutError("nameBar was not found")
+        try:
+            elements = self.__driver.find_elements(By.TAG_NAME, "button")
+            # namebar is the bottom-most element of the left hand sidebar , which shows user-email
+            nameBar_btn = utils.select_button_with_text(
+                elements, text=self.__openai_login_credentials["email"], in_div=True
+            )
+            if nameBar_btn == None:
+                raise TimeoutError
+            
+            nameBar_btn.click()
+        except Exception:
+            raise TimeoutError("Namebar was not found")
 
         # fins <nav> where clear settings are located
         nav = self.__driver.find_element(By.CSS_SELECTOR, 'nav[role="none"]')
 
-        # clicks on clear-conversations button
+        # clicks on settings button
         elements = nav.find_elements(By.TAG_NAME, "a")
         for element in elements:
-            try:
-                if element.text == "Clear conversations":
-                    clicked = False
-                    start_time = time.time()
-                    while time.time() - start_time < timeout:
-                        try:
-                            element.click()
-                            clicked = True
-                            break
-                        except Exception:
-                            time.sleep(0.5)
-                            continue
-                    if not clicked:
-                        raise TimeoutError("clear conversations button was not found")
+            if element.text == "Settings":
+                clicked = False
+                start_time = time.time()
+                while time.time() - start_time < timeout:
+                    try:
+                        element.click()
+                        clicked = True
+                        break
+                    except Exception:
+                        time.sleep(0.5)
+                        continue
+                if not clicked:
+                    raise TimeoutError("Settings button was not found")
+                else:
+                    break
 
-                    # click on confirm-clear-conversations button
-                    buttons = nav.find_elements(By.TAG_NAME, "a")
-                    for button in buttons:
-                        try:
-                            if button.text == "Confirm clear conversations":
-                                clicked = False
-                                start_time = time.time()
-                                while time.time() - start_time < timeout:
-                                    try:
-                                        button.click()
-                                        clicked = True
-                                        return
-                                    except Exception:
-                                        time.sleep(0.5)
-                                        continue
-                                if not clicked:
-                                    raise TimeoutError("confirm clear conversations button was not found")
-                        except Exception:
-                            continue
-            except Exception:
-                continue
-        raise TimeoutError("No chat history found")
+        # find the settings div        
+        try:
+            thediv = self.__driver.find_element(By.CSS_SELECTOR, 'div.absolute.inset-0')
+        except Exception:
+            raise TimeoutError('Settings div not found')
 
+        # click on clear button
+        try:
+            clear_button = thediv.find_element(By.CSS_SELECTOR, "button.btn.relative.btn-danger")
+            time.sleep(0.1)
+            if not clear_button.is_enabled(): # clear button is disabled when no previous chats found
+                raise TimeoutError("No chat history found")
+            clear_button.click()
+        except Exception:
+            raise TimeoutError("Clear button was not found")
+            
+        # find the settings div again (coz it refreshes)
+        try:
+            thediv = self.__driver.find_element(By.CSS_SELECTOR, 'div.absolute.inset-0')
+        except Exception:
+            raise TimeoutError('Settings div not found')
+
+        # click on Confirm deletion button
+        buttons = thediv.find_elements(By.TAG_NAME, "button")
+        confirm_button = utils.select_button_with_text(buttons, 'Confirm deletion')
+        if confirm_button == None:
+            raise TimeoutError("Confirm deletion button was not found")
+        confirm_button.click()           
 
 class IllegalLogoutError(RuntimeError):
     pass
