@@ -25,11 +25,8 @@ def select_button_with_text(
             and button.text.lower() == text
         ):
             return button
-        
-        if (
-            in_div == False
-            and button.text.lower() == text.lower()
-        ):
+
+        if in_div == False and button.text.lower() == text.lower():
             return button
 
         elif in_div == True:
@@ -38,7 +35,7 @@ def select_button_with_text(
                 divs = button.find_elements(By.XPATH, ".//div")
                 for div in divs:
                     # Check if the text inside the div is 'Log in'
-                    if div.text.lower() == text:
+                    if div.text.lower() == text.lower():
                         return button
             except Exception:
                 continue
