@@ -4,7 +4,7 @@ from selenium import webdriver
 from fake_useragent import UserAgent
 import utils
 import time
-from webdriver_manager.chrome import ChromeDriverManager #*** for v.116 *** #pip install webdriver_manager
+from webdriver_manager.chrome import ChromeDriverManager # *** for Chrome v.116 ***
 
 
 class ChatGPT:
