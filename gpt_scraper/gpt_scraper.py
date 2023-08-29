@@ -4,6 +4,7 @@ from selenium import webdriver
 from fake_useragent import UserAgent
 import utils
 import time
+from webdriver_manager.chrome import ChromeDriverManager #*** for v.116 *** #pip install webdriver_manager
 
 
 class ChatGPT:
@@ -74,12 +75,12 @@ class ChatGPT:
             options.add_argument("user-data-dir=./")
             options.add_experimental_option("detach", True)
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
-            return uc.Chrome(chrome_options=options)
+            return uc.Chrome(driver_executable_path=ChromeDriverManager().install(), chrome_options=options)
 
         # headless mode
         options.add_argument("--headless=new")  # for hidden mode
         return uc.Chrome(
-            options=options, version_main=115
+            options=options, version_main=116, driver_executable_path=ChromeDriverManager().install()
         )  # change version_main to your chromedriver version
 
     def set_credentials(self, email, password):
@@ -103,7 +104,9 @@ class ChatGPT:
             self.__driver.get(self.__openai_url)
             assert "ChatGPT" in self.__driver.title  # verifies the url
         except Exception:
-            raise TimeoutError('Wrong url')  # gives selenium.common.exceptions.WebDriverException either for ERR_NAME_NOT_RESOLVED (when URL is incorrect) or ERR_INTERNET_DISCONNECTED (when not connected to internet)
+            raise TimeoutError(
+                "Wrong url"
+            )  # gives selenium.common.exceptions.WebDriverException either for ERR_NAME_NOT_RESOLVED (when URL is incorrect) or ERR_INTERNET_DISCONNECTED (when not connected to internet)
 
         # clicks on Login button
         clicked = False
@@ -242,31 +245,27 @@ class ChatGPT:
         )  # additional 10 seconds because sometimes popups load slowly
 
         # clears popup 1 - 'Next' and popup 2 - also 'Next'
-        for i in range(3):
-            clicked = False
-            start_time = time.time()
-            if i < 2:
-                text = "Next"
-            else:
-                text = "Done"
+        clicked = False
+        start_time = time.time()
+        text=r"Okay, let’s go"
 
-            while time.time() - start_time < timeout:
-                try:
-                    buttons = self.__driver.find_elements(By.TAG_NAME, "button")
-                    button = utils.select_button_with_text(
-                        buttons, text=text.lower(), in_div=True
-                    )
-                    if button == None:
-                        continue
-
-                    button.click()
-                    clicked = True
-                    break
-
-                except Exception:
+        while time.time() - start_time < timeout:
+            try:
+                buttons = self.__driver.find_elements(By.TAG_NAME, "button")
+                button = utils.select_button_with_text(
+                    buttons, text=text.lower(), in_div=True
+                )
+                if button == None:
                     continue
-            if not clicked:
-                raise TimeoutError(f"Pop-up '{text}' button was not found")
+
+                button.click()
+                clicked = True
+                break
+
+            except Exception:
+                continue
+        if not clicked:
+            raise TimeoutError(f"Pop-up '{text}' button was not found")
 
     # inputs a query to ChatGPT
     def query(self, prompt):
@@ -322,7 +321,10 @@ class ChatGPT:
 
         while time.time() - start_time < timeout:
             try:
-                elements = self.__driver.find_elements(By.XPATH, '//button[contains(@class, "absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40")][@style="background-color: rgb(25, 195, 125);"]')
+                elements = self.__driver.find_elements(
+                    By.XPATH,
+                    '//button[contains(@class, "absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40")][@style="background-color: rgb(25, 195, 125);"]',
+                )
                 # finds send button using an svg inside it
                 send_button = utils.select_button_with_svg(
                     elements, xmlns=r"http://www.w3.org/2000/svg"
@@ -431,7 +433,7 @@ class ChatGPT:
             )
             if nameBar_btn == None:
                 raise TimeoutError
-            
+
             nameBar_btn.click()
         except Exception:
             raise TimeoutError("Namebar was not found")
@@ -458,19 +460,23 @@ class ChatGPT:
                 else:
                     break
 
-        # find the settings div        
+        # find the settings div
         try:
-            thediv = self.__driver.find_element(By.CSS_SELECTOR, 'div.absolute.inset-0')
+            thediv = self.__driver.find_element(By.CSS_SELECTOR, "div.absolute.inset-0")
         except Exception:
-            raise TimeoutError('Settings div not found')
+            raise TimeoutError("Settings div not found")
 
         # click on clear button
-        error = 'Clear button was not found while clearing chats'
+        error = "Clear button was not found while clearing chats"
         try:
-            clear_button = thediv.find_element(By.CSS_SELECTOR, "button.btn.relative.btn-danger")
+            clear_button = thediv.find_element(
+                By.CSS_SELECTOR, "button.btn.relative.btn-danger"
+            )
             time.sleep(0.1)
-            if not clear_button.is_enabled():  # clear button is disabled when no previous chats found
-                error = 'No chat history found'
+            if (
+                not clear_button.is_enabled()
+            ):  # clear button is disabled when no previous chats found
+                error = "No chat history found"
                 raise TimeoutError
             clear_button.click()
         except Exception:
@@ -478,17 +484,17 @@ class ChatGPT:
 
         # find the settings div again (coz it refreshes)
         try:
-            thediv = self.__driver.find_element(By.CSS_SELECTOR, 'div.absolute.inset-0')
+            thediv = self.__driver.find_element(By.CSS_SELECTOR, "div.absolute.inset-0")
         except Exception:
-            raise TimeoutError('Settings div not found')
+            raise TimeoutError("Settings div not found")
 
         # click on Confirm deletion button
         buttons = thediv.find_elements(By.TAG_NAME, "button")
-        confirm_button = utils.select_button_with_text(buttons, 'Confirm deletion')
+        confirm_button = utils.select_button_with_text(buttons, "Confirm deletion")
         if confirm_button == None:
             raise TimeoutError("Confirm deletion button was not found")
-        
-        confirm_button.click()                   
+
+        confirm_button.click()
 
 
 class IllegalLogoutError(RuntimeError):
